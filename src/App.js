@@ -1,11 +1,16 @@
 import React, {useState, useEffect} from "react";
-import Pizza from './Components/pizza'
 import Homepage from './Components/Homepage'
 import PizzaForm from './Components/PizzaForm'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import schema from './validation/formSchema'
+import * as yup from 'yup'
+import {Routes, Route, Link } from 'react-router-dom'
+import axios from "axios";
+
+
+
 
 const App = () => {
-
+ 
   const initialFormValues = {
     name: '',
     size: '',
@@ -17,18 +22,43 @@ const App = () => {
     special: ''
   }
 
-  const [formValues, setFormValues] = useState(initialFormValues)
+  const initialFormErrors = {
+    name: '',
+    size: '',
+    topping1: '',
+    topping2: '',
+    topping3: '',
+    topping4: '',
+    topping5: '',
+    special: ''
+  }
 
-  const updateForm = (inputName, inputValue) => {
+  const [formValues, setFormValues] = useState(initialFormValues)
+  const [formErrors, setFormErrors] = useState(initialFormErrors)
+
+  const validate = (name, value) => {
+    yup.reach(schema, name)
+      .validate(value)
+      .then(() => setFormErrors({...formErrors, [name]: ''}))
+      .catch(err => setFormErrors({...formErrors, [name]: err.errors[0]}))
+  }
+
+  const updateForm = (name, value) => {
+    validate(name, value)
     setFormValues({
       ...formValues,
-      [inputName]: inputValue,
+      [name]: value
     })
   }
 
   const submitForm = () => {
-  
-    const newPizza = {
+    axios.post('https://reqres.in/api/orders', formValues)
+      .then(res => {
+      console.log(res)
+    })
+      .catch(err => console.error(err))
+      .finally(() => setFormValues(initialFormValues))
+      const newPizza = {
       name: formValues.name.trim(),
       size: formValues.size,
       topping1: formValues.topping1,
@@ -41,17 +71,17 @@ const App = () => {
   }
 
   return (
-    <BrowserRouter>
+      
      <div>
       <Link to= '/'>Home</Link>
       <Link to= 'pizza'>Order</Link>
      
       <Routes>
         <Route path='/' element={<Homepage />} />
-        <Route path="pizza" element={<Pizza/>} />
+        <Route path="pizza" element={<PizzaForm submit={submitForm} update={updateForm} value={formValues} />}  />
      </Routes>
       </div>
-    </BrowserRouter>
+    
   );
 };
 export default App;

@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { toHaveFormValues } from '@testing-library/jest-dom/dist/matchers';
 
 export default function PizzaForm(props) {
 const {
     submit,
-    update
+    update,
+    value
 } = props
-
 
 
 const onChange = evt => {
     const name = evt.target.name
-    const special = evt.target.special
-    const size = evt.target.size
-    update(name, special, size)
+    const value = evt.target.value
+    update(name, value)
 }
 
 const handleSubmit = evt => {
@@ -34,18 +34,21 @@ return(
             <h2>Order Up!</h2>
         </div>
 
-        <label id= 'name-input'>Name:
+        <label >Name:
             <input
+                id= 'name-input'
                 type= 'text'
                 name="name"
+                value={value.name}
                 placeholder='Your name here'
-                onChange={onchange}
+                onChange={onChange}
             />
         </label>
 
         <div>
-        <label id="size-dropdown">Size:
+        <label >Size:
             <select 
+            id="size-dropdown"
             name='size'
             onChange={onChange}
             >
@@ -101,9 +104,11 @@ return(
         </label>
         </div>
 
-        <div id='special-text'>Special Instructions:
+        <div >Special Instructions:
             <textarea 
+                id='special-text'
                 name='special'
+                value={value.special}
                 placeholder='Any special requests?'
                 onChange={onChange}
             />
