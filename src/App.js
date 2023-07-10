@@ -71,14 +71,14 @@ const App = () => {
   }
 
   return (
-      
+    
      <div>
       <Link to= '/'>Home</Link>
       <Link to= 'pizza'>Order</Link>
      
       <Routes>
         <Route path='/' element={<Homepage />} />
-        <Route path="pizza" element={<PizzaForm submit={submitForm} update={updateForm} value={formValues} />}  />
+        <Route path="pizza" element={<PizzaForm submit={submitForm} update={updateForm} value={formValues} errors={formErrors}/>}  />
      </Routes>
       </div>
     

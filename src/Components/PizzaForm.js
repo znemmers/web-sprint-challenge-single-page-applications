@@ -7,9 +7,9 @@ export default function PizzaForm(props) {
 const {
     submit,
     update,
-    value
+    value,
+    errors
 } = props
-
 
 const onChange = evt => {
     const name = evt.target.name
@@ -33,7 +33,7 @@ return(
         <div>
             <h2>Order Up!</h2>
         </div>
-
+        
         <label >Name:
             <input
                 id= 'name-input'
@@ -44,7 +44,7 @@ return(
                 onChange={onChange}
             />
         </label>
-
+        <p>{errors.name}</p>
         <div>
         <label >Size:
             <select 
